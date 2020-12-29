@@ -1,4 +1,5 @@
 import json
+import datetime
 
 def parse(obj, printit=True):
     #convert to string
@@ -9,3 +10,10 @@ def parse(obj, printit=True):
     if(printit==True):
         print(prettyParsed)
     return prettyParsed
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, z):
+        if isinstance(z, datetime.datetime):
+            return (str(z))
+        else:
+            return super().default(z)
