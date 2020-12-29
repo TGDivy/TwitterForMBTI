@@ -1,7 +1,7 @@
 import tweepy
 import json
 
-
+import utils
 
 consumer_key = "7QBptQNO9Ya2XtDzjswaW27uR"
 consumer_secret = "HOa8SsMhNgZVfucUUSUaGtlGOvft8goeIflTuAvXM8mCsF7vWK"
@@ -28,11 +28,13 @@ status = public_tweets[0]
 
 user_id = status.user.id
 
-print(user_id)
-for i in intj:
-    print(i.name, i.id)
-print(api.favorites(intj[0].id)[0].text)    
-# parse(intj[0])
+# print(user_id)
+# for i in intj:
+#     print(i.name, i.id)
+a = api.favorites(id=api.me().id, tweet_mode="extended", trim_user =True)[3]
+# a = api.get_status(id=a.id, tweet_mode="extended", trim_user =True)
+utils.parse(a)
+print(a.full_text)    
 # parse(api.get_user(user_id))
 
 
