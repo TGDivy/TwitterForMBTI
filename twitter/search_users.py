@@ -1,7 +1,7 @@
 import json
 import csv
 
-# import utils
+import utils
 import auth
 from datetime import datetime
 from tqdm import tqdm
@@ -24,30 +24,42 @@ class search:
 
     def save_results(self, query, page, results, fresh=False):
         if fresh:
-            file_handle = open("users.csv", "w")
+            file_handle = open("users.json", "w")
         else:
-            file_handle = open("users.csv", "a")
+            file_handle = open("users.json", "r")
 
-        with file_handle as csv_file:
+        with file_handle as json_file:
+            data = json.load(json_file)
             for result in results:
+                if result.id_str in data:
+                    continue
+
                 if self.profile_validity(query, result):
-                    row = [
-                        query,
-                        page,
-                        datetime.now(),
-                        result.id,
-                        result.screen_name,
-                        result.name,
-                        result.description,
-                    ]
-                    writer = csv.writer(csv_file)
-                    writer.writerow(row)
+                    dic = {
+                        result.id_str:
+                           {"screen_name":result.screen_name,
+                            "name":result.name,
+                            "bio":result.description,
+                            "MBTI type":"",
+                            "posts_liked":[],
+                            "posts_posted":[],
+                            "query":query,
+                            "page":page,
+                            "favorites_count:":result.favourites_count,
+                            "statuses_count":result.statuses_count,
+                            "location":result.location,
+                            "queried_at":datetime.today()}
+                    }
+                    data.update(dic)
+
+        with open("users.json", "w") as json_file:
+            json.dump(data, json_file, indent=4, cls=utils.DateTimeEncoder)
 
     def check(self, query, page):
-        with open("users.csv", "r") as csv_file:
-            reader = csv.reader(csv_file)
-            for row in reader:
-                if row[0:2] == [str(query), str(page)]:
+        with open("users.json", "r") as json_file:
+            data = json.load(json_file)
+            for id in data.keys():
+                if data[id]["query"] == str(query) and data[id]["page"] == str(page):
                     print("already queried")
                     return 0
         return 1

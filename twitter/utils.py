@@ -1,5 +1,6 @@
 import json
 import datetime
+import os
 
 def parse(obj, printit=True):
     #convert to string
@@ -17,3 +18,9 @@ class DateTimeEncoder(json.JSONEncoder):
             return (str(z))
         else:
             return super().default(z)
+
+def create_if_not_json(filename):
+    if not os.path.exists(filename):
+        a = open(filename, 'w')
+        a.write("{ }\n")
+        a.close()
