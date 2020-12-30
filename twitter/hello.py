@@ -33,9 +33,9 @@ user_id = status.user.id
 #     print(i.name, i.id)
 a = api.favorites(id=api.me().id, tweet_mode="extended", trim_user =True)[3]
 # a = api.get_status(id=a.id, tweet_mode="extended", trim_user =True)
-utils.parse(a)
-print(a.full_text)    
-# parse(api.get_user(user_id))
+# utils.parse(a)
+# print(a.full_text)    
+utils.parse(api.get_user(user_id))
 
 
 
