@@ -11,7 +11,7 @@ def auth():
 
     auth = tweepy.OAuthHandler(keys_dict['consumer_key'], keys_dict['consumer_secret'])
     auth.set_access_token(keys_dict['access_token_key'], keys_dict['access_token_secret'])
-    api = tweepy.API(auth)
+    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
     return keys_dict, api
 
 if __name__ == "__main__":
