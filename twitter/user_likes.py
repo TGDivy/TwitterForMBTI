@@ -9,14 +9,15 @@ from tqdm import tqdm
 import tweepy
 
 class user_likes:
-    def __init__(self):
-        self.twitter_keys, self.api = auth.auth()
+    def __init__(self, key_number):
+        self.twitter_keys, self.api = auth.auth(index=key_number)
 
     def all_likes(self, user_id, generic=True):
         max_pages=16
         if not generic:
             json_file = open("users.json","r")
             data = json.load(json_file)
+            json_file.close()
             user = data[user_id]
             # print(user)
             pages = min(int(user["favorites_count:"]/20), max_pages)
@@ -26,8 +27,7 @@ class user_likes:
             pages = min(int(user.favourites_count/20), max_pages)
             filename = "generic.json"
 
-
-        for page in tqdm(range(1, pages)):
+        for page in (range(1, pages)):
             self.likes(user_id, page=page, filename=filename)
 
     def likes(self, user_id, filename="generic.json", page=1):
@@ -39,9 +39,7 @@ class user_likes:
                 self.save_posts(user_id, results, filename=filename)
                 self.save_queries(user_id, page)
             except Exception as ex:
-                print("#######################")
                 print(ex)
-                print("#######################")
 
     def save_queries(self, user_id, page, fresh=False):
         if fresh:
@@ -74,7 +72,7 @@ class user_likes:
             data = json.load(json_file)
 
             if filename!="generic.json":
-                json_file2 = open("users.json","r")
+                json_file2 = open("users_likes.json","r")
                 data2 = json.load(json_file2)
 
             for result in results:
@@ -82,8 +80,6 @@ class user_likes:
                 if result.id_str in data:
                     data[result.id_str]["liked_by"] += [user_id]
                     data[result.id_str]["liked_by"] = list(set(data[result.id_str]["liked_by"]))
-                    print("SIMILAR LIKES")
-                    print("#######################")
                     continue
                 hashtags = []
                 media = []
@@ -110,7 +106,7 @@ class user_likes:
         
         if filename!="generic.json":
             json_file2.close
-            json_file2 = open("users.json","w")
+            json_file2 = open("users_likes.json","w")
             json.dump(data2, json_file2, indent=2, cls=utils.DateTimeEncoder)
             json_file2.close
                     
@@ -119,13 +115,13 @@ class user_likes:
 
 
 def main():
-    s = user_likes()
-    s.all_likes("295", generic=False)
-
+    
     json_file = open("users.json","r")
     data = json.load(json_file)
     json_file.close()
-    for id in tqdm(data.keys()):
+    
+    for i,id in enumerate(tqdm(data.keys())):
+        s = user_likes(key_number=i%4)
         s.all_likes(id, generic=False)
 
 if __name__ == "__main__":
