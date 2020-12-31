@@ -24,3 +24,20 @@ def create_if_not_json(filename):
         a = open(filename, 'w')
         a.write("{ }\n")
         a.close()
+
+class update_json():
+    def __init__(self, filename):
+        self.filename = "data/"+filename
+        self.load_json()
+
+    def load_json(self):
+        create_if_not_json(self.filename)
+        json_file = open(self.filename, "r")
+        self.data = json.load(json_file)
+        json_file.close()
+        return self.data
+        
+    def write(self):
+        with open(self.filename, "w") as json_file:
+            json.dump(self.data, json_file, indent=4, cls=DateTimeEncoder)
+    
