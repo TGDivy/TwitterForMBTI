@@ -88,10 +88,10 @@ class search:
 
 def main():
     s = search()
-    s.users_likes()
+    # s.users_likes()
     
-    # for keyword in parameters.KEYWORDS:
-    #     s.search_all(keyword)
+    for keyword in parameters.KEYWORDS:
+        s.search_all(keyword)
 
 if __name__ == "__main__":
     main()
