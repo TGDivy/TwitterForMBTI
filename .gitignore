@@ -131,3 +131,5 @@ dmypy.json
 #Actual Useful ignores
 *.csv
 *.json
+users.json
+
