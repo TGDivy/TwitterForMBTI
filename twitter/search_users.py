@@ -58,7 +58,7 @@ class search:
 
     def users_likes(self):
         updater = utils.update_json("users_likes.json")
-        user_ids_obj = utils.update_json("data/users.json")
+        user_ids_obj = utils.update_json("users.json")
         user_ids = user_ids_obj.data.keys()
         for id in user_ids:
             if id not in updater.data:
